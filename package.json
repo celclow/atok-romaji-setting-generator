@@ -1,0 +1,23 @@
+{
+    "name": "atok-romaji-setting-generator",
+    "version": "0.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "ts-node src/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/binary-parser": "^1.5.2",
+        "@types/moji": "^0.5.1",
+        "@types/node": "^20.7.0",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "binary-parser": "^2.2.1",
+        "moji": "^0.5.1"
+    }
+}
