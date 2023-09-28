@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import moji from "moji";
 
 export class AtokRomajiSettingGenerator {
@@ -200,10 +199,3 @@ export class AtokRomajiSettingGenerator {
         return this.romajiTable.toString();
     }
 }
-
-const content = fs.readFileSync("./sample/sample_macos.txt", "ascii");
-const buffer = Buffer.from(content, "base64");
-
-const gen = new AtokRomajiSettingGenerator();
-gen.parseMacos(buffer);
-console.log(gen.generateMacos().toString("base64"));
