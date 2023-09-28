@@ -19,6 +19,14 @@ export class AtokRomajiSettingGenerator {
         }
     }
 
+    addSokuonCharacter(s: String) {
+        this.add(`${s}\u001f`, "っ");
+    }
+
+    addHatsuonCharacter(s: String) {
+        this.add(`${s}\u001e`, "ん");
+    }
+
     private isValidating(romaji: string, kana: string): boolean {
         // TODO
         return true;
