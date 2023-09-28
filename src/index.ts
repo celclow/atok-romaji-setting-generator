@@ -2,7 +2,7 @@ import * as fs from "fs";
 import moji from "moji";
 
 class AtokRomajiSettingGenerator {
-    table: { romaji: string; kana: string }[] = [];
+    private table: { romaji: string; kana: string }[] = [];
 
     add(romaji: string, kana: string) {
         const editedKana = moji(kana)
@@ -15,12 +15,20 @@ class AtokRomajiSettingGenerator {
         }
     }
 
-    isValidating(romaji: string, kana: string): boolean {
+    private isValidating(romaji: string, kana: string): boolean {
         // TODO
         return true;
     }
 
+    generateWindows(): Buffer {
+        return this.generate(false);
+    }
+
     generateMacos(): Buffer {
+        return this.generate(true);
+    }
+
+    private generate(isMacos: Boolean): Buffer {
         this.table.sort((a, b) => (a.romaji < b.romaji ? -1 : 1));
 
         const arrayBuffer = new ArrayBuffer(16392);
@@ -67,11 +75,13 @@ class AtokRomajiSettingGenerator {
                 this.table[i].romaji.length + this.table[i].kana.length;
         }
 
-        // macos用ダミー
-        for (let i = size; i < 1000; i++) {
-            offset += 2;
-            offset += 1;
-            offset += 1;
+        // macOS用ダミー
+        if (isMacos) {
+            for (let i = size; i < 1000; i++) {
+                offset += 2;
+                offset += 1;
+                offset += 1;
+            }
         }
 
         // コード部
@@ -86,10 +96,22 @@ class AtokRomajiSettingGenerator {
             }
         }
 
-        return Buffer.from(arrayBuffer);
+        if (isMacos) {
+            offset = 16392;
+        }
+
+        return Buffer.from(arrayBuffer.slice(0, offset));
+    }
+
+    parseWindows(buffer: Buffer) {
+        return this.parse(buffer, false);
     }
 
     parseMacos(buffer: Buffer) {
+        return this.parse(buffer, true);
+    }
+
+    private parse(buffer: Buffer, isMacos: Boolean) {
         const arrayBuffer = this.toArrayBuffer(buffer);
         const view = new DataView(arrayBuffer);
 
@@ -128,11 +150,13 @@ class AtokRomajiSettingGenerator {
             offset += 1;
         }
 
-        // macos用ダミー
-        for (let i = size; i < 1000; i++) {
-            offset += 2;
-            offset += 1;
-            offset += 1;
+        // macOS用ダミー
+        if (isMacos) {
+            for (let i = size; i < 1000; i++) {
+                offset += 2;
+                offset += 1;
+                offset += 1;
+            }
         }
 
         // コード部
@@ -161,7 +185,7 @@ class AtokRomajiSettingGenerator {
         }
     }
 
-    toArrayBuffer(buffer: Buffer) {
+    private toArrayBuffer(buffer: Buffer) {
         const arrayBuffer = new ArrayBuffer(buffer.length);
         const view = new Uint8Array(arrayBuffer);
         for (let i = 0; i < buffer.length; ++i) {
