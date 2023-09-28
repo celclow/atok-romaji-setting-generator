@@ -2,7 +2,7 @@ import * as fs from "fs";
 import moji from "moji";
 
 class AtokRomajiSettingGenerator {
-    private table: { [key: string]: string } = {};
+    private romajiTable: { [key: string]: string } = {};
 
     add(romaji: string, kana: string) {
         const editedKana = moji(kana)
@@ -11,7 +11,7 @@ class AtokRomajiSettingGenerator {
             .toString();
 
         if (this.isValidating(romaji, editedKana)) {
-            this.table[romaji] = editedKana;
+            this.romajiTable[romaji] = editedKana;
         }
     }
 
@@ -30,12 +30,14 @@ class AtokRomajiSettingGenerator {
 
     private generate(isMacos: Boolean): Buffer {
         // ローマ字テーブルをキーでソート
-        this.table = Object.fromEntries(Object.entries(this.table).sort());
+        this.romajiTable = Object.fromEntries(
+            Object.entries(this.romajiTable).sort()
+        );
 
         const arrayBuffer = new ArrayBuffer(16392);
         const view = new DataView(arrayBuffer);
 
-        const size = Object.keys(this.table).length;
+        const size = Object.keys(this.romajiTable).length;
 
         let offset = 0;
 
@@ -51,7 +53,7 @@ class AtokRomajiSettingGenerator {
         let prefixCharCumulativeSum = 0;
         for (let c = 0x20; c <= 0x7f; c++) {
             const prefix = String.fromCharCode(c);
-            const prefixCharSize = Object.keys(this.table).filter((k) => {
+            const prefixCharSize = Object.keys(this.romajiTable).filter((k) => {
                 return k.startsWith(prefix);
             }).length;
 
@@ -65,14 +67,14 @@ class AtokRomajiSettingGenerator {
 
         // コードサイズ部
         let dictCumulativeSumArray = 0;
-        for (const key in this.table) {
+        for (const key in this.romajiTable) {
             view.setUint16(offset, dictCumulativeSumArray);
             offset += 2;
             view.setUint8(offset, key.length);
             offset += 1;
-            view.setUint8(offset, this.table[key].length);
+            view.setUint8(offset, this.romajiTable[key].length);
             offset += 1;
-            dictCumulativeSumArray += key.length + this.table[key].length;
+            dictCumulativeSumArray += key.length + this.romajiTable[key].length;
         }
 
         // macOS用ダミー
@@ -85,12 +87,12 @@ class AtokRomajiSettingGenerator {
         }
 
         // コード部
-        for (const key in this.table) {
+        for (const key in this.romajiTable) {
             for (const c of key) {
                 view.setUint16(offset, c.charCodeAt(0));
                 offset += 2;
             }
-            for (const c of this.table[key]) {
+            for (const c of this.romajiTable[key]) {
                 view.setUint16(offset, c.charCodeAt(0));
                 offset += 2;
             }
@@ -195,7 +197,7 @@ class AtokRomajiSettingGenerator {
     }
 
     toString(): string {
-        return this.table.toString();
+        return this.romajiTable.toString();
     }
 }
 
