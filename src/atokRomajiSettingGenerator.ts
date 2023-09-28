@@ -7,7 +7,12 @@ export class AtokRomajiSettingGenerator {
         const editedKana = moji(kana)
             .convert("HG", "KK")
             .convert("ZK", "HK")
-            .toString();
+            .toString()
+            .replace("ヰ", "\u0010")
+            .replace("ヱ", "\u0011")
+            .replace("ヵ", "\u0012")
+            .replace("ヶ", "\u0013")
+            .replace("ヮ", "\u0014");
 
         if (this.isValidating(romaji, editedKana)) {
             this.romajiTable[romaji] = editedKana;
