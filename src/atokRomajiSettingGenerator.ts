@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import moji from "moji";
 
-class AtokRomajiSettingGenerator {
+export class AtokRomajiSettingGenerator {
     private romajiTable: { [key: string]: string } = {};
 
     add(romaji: string, kana: string) {
