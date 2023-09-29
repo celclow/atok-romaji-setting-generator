@@ -276,7 +276,7 @@ test("Only add", () => {
     const windowsResult = generator.generateWindows().toString("hex");
     const windowsSample = fs.readFileSync(
         "./sample/sample_windows.txt",
-        "ascii"
+        "ascii",
     );
     expect(windowsResult).toEqual(windowsSample);
 });
