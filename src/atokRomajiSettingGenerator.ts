@@ -1,3 +1,4 @@
+import { Buffer } from "buffer";
 import moji from "moji";
 
 export class AtokRomajiSettingGenerator {
@@ -43,7 +44,7 @@ export class AtokRomajiSettingGenerator {
     private generate(isMacos: Boolean): Buffer {
         // ローマ字テーブルをキーでソート
         this.romajiTable = Object.fromEntries(
-            Object.entries(this.romajiTable).sort()
+            Object.entries(this.romajiTable).sort(),
         );
 
         const arrayBuffer = new ArrayBuffer(16392);
@@ -181,14 +182,14 @@ export class AtokRomajiSettingGenerator {
         for (let i = 0; i < size; i++) {
             inCodeArray.push(
                 utf16beDecoder.decode(
-                    arrayBuffer.slice(offset, offset + 2 * inCodeSizeArray[i])
-                )
+                    arrayBuffer.slice(offset, offset + 2 * inCodeSizeArray[i]),
+                ),
             );
             offset += 2 * inCodeSizeArray[i];
             outCodeArray.push(
                 utf16beDecoder.decode(
-                    arrayBuffer.slice(offset, offset + 2 * outCodeSizeArray[i])
-                )
+                    arrayBuffer.slice(offset, offset + 2 * outCodeSizeArray[i]),
+                ),
             );
             offset += 2 * outCodeSizeArray[i];
         }
