@@ -10,7 +10,6 @@
     "author": "",
     "license": "MIT",
     "devDependencies": {
-        "@types/binary-parser": "^1.5.2",
         "@types/jest": "^29.5.5",
         "@types/moji": "^0.5.1",
         "@types/node": "^20.7.0",
@@ -21,7 +20,6 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "binary-parser": "^2.2.1",
         "moji": "^0.5.1"
     }
 }
