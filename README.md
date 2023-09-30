@@ -1,4 +1,4 @@
-# atok-romaji-setting-generator-web
+# atok-romaji-setting-generator
 
 ATOKローマ字設定ジェネレーター
 
